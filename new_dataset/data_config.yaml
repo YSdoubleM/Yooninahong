@@ -1,0 +1,16 @@
+colors:
+- [0, 0, 0]
+- [235, 188, 71]
+- [240, 49, 20]
+- [127, 213, 114]
+- [169, 254, 22]
+- [115, 242, 185]
+- [221, 36, 235]
+- [4, 159, 92]
+- [45, 132, 149]
+- [58, 90, 152]
+names: [car, manonscooter, manonmotor, person, person_back, bollard, bike, manonbike,
+  electricscooter, motorcycle]
+nc: 10
+train: ../168646_Yooninahong (with train-val tags)/images/train
+val: ../168646_Yooninahong (with train-val tags)/images/val
