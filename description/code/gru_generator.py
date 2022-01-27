@@ -12,16 +12,34 @@ with open('/Users/hongseongmi/Documents/git_ws/Yooninahong/description/data/char
 n = 35
 max_len = 30
 total = []
+objects = {
+    'person':'사람',
+    'person_back':'사람',
+    'car':'차',
+    'bike':'자전거',
+    'motorcycle':'오토바이',
+    'electricscooter':'전동킥보드',
+    'bollard':'볼라드'
+    }
 
 def main(key):
-    generate(key)
+    key = list(key.split())
+    length = len(key)
+    obj = [objects[key[i]] for i in range(1, length, 2)]
+    generate(obj)
+    # for i in range(0, length, 2):
+    #     num = int(key[i])
+    #     if num > 1:
+    #         pass
+    #     else:
+    #         pass
 
-def generate(key):
-    klen = len(key)
-    print(klen)
+def generate(obj):
+    olen = len(obj)
+    print(olen)
 
-    for k in key:
-        current_word = k
+    for o in obj:
+        current_word = o
         init_word = current_word # 처음 들어온 단어도 마지막에 같이 출력하기위해 저장
         sentence = ''
         for _ in range(n): # n번 반복
@@ -43,9 +61,9 @@ def generate(key):
                 break
         # for문이므로 이 행동을 다시 반복
         sentence = init_word + sentence
-        if klen > 1:
+        if olen > 1:
             sentence = sentence.replace('습니다<EOS>',"고 ")
-            klen -= 1
+            olen -= 1
         else:
             sentence = sentence.replace('<EOS>',"")
         print(sentence)
