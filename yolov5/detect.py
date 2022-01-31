@@ -46,6 +46,89 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 
+import time
+
+
+#Hong's GRU generator
+###################################################################################
+import numpy as np
+from keras.models import load_model
+import pickle
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+model = load_model('.\description\senten_generating_model3.h5')
+
+# load vec ID
+with open('.\description\data\char2idx3.pickle', 'rb') as fr:
+    char2idx = pickle.load(fr)
+
+n = 35
+max_len = 30
+
+objects = {
+    'person':'사람',
+    'person_back':'사람',
+    'car':'차',
+    'bike':'자전거',
+    'motorcycle':'오토바이',
+    'electricscooter':'전동킥보드',
+    'bollard':'볼라드'
+    }
+
+
+
+def GRU_main(key):
+    key = list(key.split())
+    length = len(key)
+    obj = []
+    
+    for i in range(0, length-1, 2):
+        num = int(key[i])
+        if num > 1:
+            k = '다수의 ' + objects[key[i+1]]
+            obj.append(k)
+        else:
+            obj.append(objects[key[i+1]])
+    
+    return generate(obj)
+
+def generate(obj):
+    total = []
+    olen = len(obj)
+
+    for o in obj:
+        current_word = o
+        init_word = current_word # 처음 들어온 단어도 마지막에 같이 출력하기위해 저장
+        sentence = ''
+        for _ in range(n):
+            encoded = [char2idx[token] for token in current_word]
+            # 현재 단어에 대한 정수 인코딩
+            
+            encoded = pad_sequences([encoded], maxlen=max_len-1, padding='pre') 
+            # 데이터에 대한 패딩
+            
+            result = np.argmax(model.predict(encoded), axis=-1) 
+            # 입력한 X(현재 단어)에 대해서 Y를 예측하고 Y(예측한 단어)를 result에 저장.
+            for word, index in char2idx.items(): 
+
+                if index == result: # 만약 예측한 단어와 인덱스와 동일한 단어가 있다면
+                    break # 해당 단어가 예측 단어이므로 break
+            current_word = current_word + word # 현재 단어 + ' ' + 예측 단어를 현재 단어로 변경
+            sentence = sentence + word # 예측 단어를 문장에 저장
+            if word == '<EOS>':
+                break
+        # for문이므로 이 행동을 다시 반복
+
+        sentence = init_word + sentence
+        if olen > 1:
+            sentence = sentence.replace('습니다<EOS>',"고 ")
+            olen -= 1
+        else:
+            sentence = sentence.replace('<EOS>',"")
+        total.append(sentence)
+
+    return ''.join(total)
+############################################################################
 
 @torch.no_grad()
 def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
@@ -80,6 +163,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
     webcam = source.isnumeric() or source.endswith('.txt') or (is_url and not is_file)
+    buffer = ''
     if is_url and is_file:
         source = check_file(source)  # download
 
@@ -181,7 +265,10 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
             #기존에 터미널에 출력되던 로그 메세지는 input으로 사용하기 어렵고 불필요한 정보가 많아서
             #다른 부분을 제거해준 뒤 : 을 기준으로 나누어서 맨 마지막번째를 사용
             
-            print(s.split(':')[-1])
+            input_arg = s.split(':')[-1]
+            if buffer != input_arg:
+                buffer = input_arg
+                print(GRU_main(input_arg))
 
             # Stream results
             im0 = annotator.result()
@@ -258,5 +345,8 @@ def main(opt):
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     opt = parse_opt()
     main(opt)
+    end_time = time.time()
+    print(end_time-start_time)
