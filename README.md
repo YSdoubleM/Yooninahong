@@ -25,6 +25,26 @@
 - char2idx3.pickle
 ---
 
+## Notice
+---
+
+If you run this project in colab, modify detect file's line 59 and line 62
+
+
+```
+#### line 59
+model = load_model('/content/Yooninahong/description/senten_generating_model3.h5')
+
+#### line 62
+with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
+```
+
+
+
+
+
+---
+
 # Contents🧑🏻‍🦯
 
 1. [프로젝트 소개](#프로젝트-소개) 
