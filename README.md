@@ -63,7 +63,7 @@
 
 ### 프로젝트 배경   
 
-<p><img width="500" src="https://user-images.githubusercontent.com/48639017/152989614-064fb259-aa8c-4b1a-bebc-d914d16203a6.jpeg"><img width="487" src="https://user-images.githubusercontent.com/48639017/152989697-12714c9b-59a5-41f4-b0ed-45b1460d51da.png"></p>
+<p><img style="max-width:50%; height:auto;" src="https://user-images.githubusercontent.com/48639017/152989614-064fb259-aa8c-4b1a-bebc-d914d16203a6.jpeg"><img style="max-width:50%; height:auto;" src="https://user-images.githubusercontent.com/48639017/152989697-12714c9b-59a5-41f4-b0ed-45b1460d51da.png"></p>
 
 시각장애인은 점자블록에 의존해 보행하지만, 미관 등의 이유로 저시력 시각 장애인에게는 오히려 방해 요소로 자리잡았으며 점자블록 너무 가까이에 시설물이 설치되어 보행을 방해합니다. </br> 
 - 시각 장애인이 전방의 장애물을 미리 인지해 피할 수 있도록 도울 수 없을까?
