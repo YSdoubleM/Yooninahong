@@ -39,10 +39,6 @@ model = load_model('/content/Yooninahong/description/senten_generating_model3.h5
 with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 ```
 
-
-
-
-
 ---
 
 # Contents🧑🏻‍🦯
@@ -106,3 +102,4 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 # GRU 모델링
 
 # 결론
+
