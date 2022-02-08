@@ -163,6 +163,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
     webcam = source.isnumeric() or source.endswith('.txt') or (is_url and not is_file)
+    #add buffer
     buffer = ''
     if is_url and is_file:
         source = check_file(source)  # download
@@ -261,7 +262,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                             save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
 
             # Print time (inference-only)
-            #LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
+            LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
             #기존에 터미널에 출력되던 로그 메세지는 input으로 사용하기 어렵고 불필요한 정보가 많아서
             #다른 부분을 제거해준 뒤 : 을 기준으로 나누어서 맨 마지막번째를 사용
             
