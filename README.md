@@ -99,7 +99,7 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 # YOLOv5 모델링
 
-### 데이터 수집 및 라벨링
+### 1. 데이터 수집 및 라벨링
 
 - 데이터 수집
     - target object
@@ -117,8 +117,8 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
     ![image](https://user-images.githubusercontent.com/57916633/153195391-053061fa-e25b-4caa-8eea-73a8f1606d4a.png)
 
 
-### YOLOv5 모델링
----
+### 2. YOLOv5 모델링
+
 
 - 1차 학습
     - yaml 파일 수정 후 train 바로 진행
@@ -138,10 +138,10 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 - 4차 학습
     - bounding box augmentation 오류 수정
     - 최종 모델 생성
-
-
-### 오류 발견 및 해결
 ---
+
+### 3. 오류 발견 및 해결
+
 
 - Threshold 값 조절
     - 1차 학습시 모델 train 성능은 약 90%
@@ -162,8 +162,9 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 ---
 
-### 성능 평가
----
+
+### 4. 성능 평가
+
 - PR curve
 
     ![image](https://user-images.githubusercontent.com/57916633/153210729-e1676809-274a-4ab8-8806-5e06aaca6f1d.png)
@@ -182,7 +183,8 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
     
     - 빨간색 박스로 표시된 FP는 탐지할 object가 없는 background를 object가 존재한다고 잘못 예측한 경우
     - 3분의 1 이상이 볼라드 였으며, 이는 볼라드의 특징이 비교적 다른 object에 비해 간단하여 벌어진 문제로 판단
-    
+    - 
+---
 
 ---
 # GRU 모델링
