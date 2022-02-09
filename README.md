@@ -158,11 +158,28 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 - Bounding box augmentation
     - image augmentation 시 기존의 bounding box가 함꼐 변형되어야 하나, 잘못 변형되는 오류가 발생
     - [x_center, y_center, w, h] 좌표를 실제 좌표값으로 변경하여 augmentation 적용시키는 방식으로 해결
-    
+    ![image](https://user-images.githubusercontent.com/57916633/153210451-11caa5b9-e35b-4c71-bc59-591934762788.png)
+
 ---
 
 ### 성능 평가
+---
+- PR curve
+    ![image](https://user-images.githubusercontent.com/57916633/153210729-e1676809-274a-4ab8-8806-5e06aaca6f1d.png)
+    - PR curve의 아래 면적인 mAP(mean Average Precision)값을 가지고 성능을 평가
+    - 약 93%의 정확도를 보임
+- Confusion matrix
+    ![image](https://user-images.githubusercontent.com/57916633/153211692-3dc15a78-4b1b-4c43-89a7-f138da4ed000.png)
+    - 대각선이 진하게 나타난 것을 통해 object가 올바르게 예측되고 있다는 것을 알 수 있음
+    - 빨간색 박스로 표시한 background FN은 각 object를 background라고 잘못 예측한 경우의 비율
+    - 볼라드는 15%의 오차가 있었지만 그 외의 클래스는 대부분 5% 미만으로 준수한 결과
+    
+    ![image](https://user-images.githubusercontent.com/57916633/153212053-6f85bc8f-efc1-4d74-9c83-c90245b7d1bb.png)
+    - 빨간색 박스로 표시된 FP는 탐지할 object가 없는 background를 object가 존재한다고 잘못 예측한 경우
+    - 3분의 1 이상이 볼라드 였으며, 이는 볼라드의 특징이 비교적 다른 object에 비해 간단하여 벌어진 문제로 판단
+    
 
+---
 # GRU 모델링
 
 # 결론
