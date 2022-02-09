@@ -28,7 +28,7 @@
 ## Notice
 ---
 
-If you run this project in Google Colaboratory, modify detect.py in line 59 and line 62
+If you run this project in Google Colaboratory, modify file address in detect.py's line 59 and line 62
 
 
 ```
