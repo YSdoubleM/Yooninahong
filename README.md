@@ -99,6 +99,29 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 # YOLOv5 모델링
 
+### 데이터 수집 및 라벨링
+
+- 데이터 수집
+    - target object
+        - car, bike, motorcycle, electric scooter, person, bollard
+        - 보행자가 인지하고 피하거나 주의할 수 있는 물체 위주로 선정.
+    - train image data
+        - Crawling : Google 이미지 검색 결과 크롤링
+        - Kaggle - [People Clothing Segmentation](https://www.kaggle.com/rajkumarl/people-clothing-segmentation) : 다양한 모습의 사람 전신 이미지
+    - test video data
+        - AI hub - 1인칭 시점 보행영상
+        - Youtube - 뉴스 영상
+        - Video - 직접 촬영
+- Class Labeling
+    - image annotation tool : [Supervise.ly](https://supervise.ly/) : Web platform for computer vision, Annotation, traning and deploy.
+    - 
+
+### YOLOv5 모델링
+
+### 오류 발견 및 해결
+
+### 성능 평가
+
 # GRU 모델링
 
 # 결론
