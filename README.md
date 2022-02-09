@@ -118,27 +118,48 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 
 ### YOLOv5 모델링
+---
 
 - 1차 학습
     - yaml 파일 수정 후 train 바로 진행
     - test video에서의 인식률이 다소 저조
+    
 - 2차 학습
     - image augmentation후 train - image_augmentation_geo.py
         - 1200장의 image를 3750장으로 augmentation.
         - 회전, 일부 가리기 등 적용
+        
     - test video의 물체 검출 인식률 소폭 상승
 - 3차 학습
     - class 추가 및 augmentation 후 train
         - 기존의 class를 세분화하여 정면 이미지와 후면 이미지로 분리
         - train batch 확인 - augmentation에 의해서 회전된 이미지에 대한 bounding box의 변형이 올바르지 못한 것을 확인
+        
 - 4차 학습
     - bounding box augmentation 오류 수정
     - 최종 모델 생성
 
 
 ### 오류 발견 및 해결
+---
 
-- 
+- Threshold 값 조절
+    - 1차 학습시 모델 train 성능은 약 90%
+    - test video에서 전혀 인식하지 못해 threshold값을 0.5에서 0.25로 하향조절
+    
+- Train image 재작업
+    - 인식 정확도 낮은 class의 image를 추가 수집 후 labeling
+    - 한 class 내 형태 다향성으로 인해 인식 정확도 낮은 경우, class를 세부 분할
+    
+- Image augmentation
+    - 실제 test video 인식률 향상을 위해 train image 밝기, 일부 가리기, 회전 을 적용해 증복
+    - YOLOv5 내부 코드의 aumgmeetation을 사용하지 않고 imgaug module을 사용해 이미지 증강 sequence 코드 추가
+    
+- Bounding box augmentation
+    - image augmentation 시 기존의 bounding box가 함꼐 변형되어야 하나, 잘못 변형되는 오류가 발생
+    - [x_center, y_center, w, h] 좌표를 실제 좌표값으로 변경하여 augmentation 적용시키는 방식으로 해결
+    
+---
 
 ### 성능 평가
 
