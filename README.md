@@ -114,11 +114,31 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
         - Video - 직접 촬영
 - Class Labeling
     - image annotation tool : [Supervise.ly](https://supervise.ly/) : Web platform for computer vision, Annotation, traning and deploy.
-    - 
+    ![image](https://user-images.githubusercontent.com/57916633/153195391-053061fa-e25b-4caa-8eea-73a8f1606d4a.png)
+
 
 ### YOLOv5 모델링
 
+- 1차 학습
+    - yaml 파일 수정 후 train 바로 진행
+    - test video에서의 인식률이 다소 저조
+- 2차 학습
+    - image augmentation후 train - image_augmentation_geo.py
+        - 1200장의 image를 3750장으로 augmentation.
+        - 회전, 일부 가리기 등 적용
+    - test video의 물체 검출 인식률 소폭 상승
+- 3차 학습
+    - class 추가 및 augmentation 후 train
+        - 기존의 class를 세분화하여 정면 이미지와 후면 이미지로 분리
+        - train batch 확인 - augmentation에 의해서 회전된 이미지에 대한 bounding box의 변형이 올바르지 못한 것을 확인
+- 4차 학습
+    - bounding box augmentation 오류 수정
+    - 최종 모델 생성
+
+
 ### 오류 발견 및 해결
+
+- 
 
 ### 성능 평가
 
