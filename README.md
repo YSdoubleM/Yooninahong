@@ -163,7 +163,7 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 - Bounding box augmentation
     - image augmentation 시 기존의 bounding box가 함꼐 변형되어야 하나, 잘못 변형되는 오류가 발생
     - [x_center, y_center, w, h] 좌표를 실제 좌표값으로 변경하여 augmentation 적용시키는 방식으로 해결
-    ![image](https://user-images.githubusercontent.com/57916633/153210451-11caa5b9-e35b-4c71-bc59-591934762788.png)
+        <img width="846" alt="Screen Shot 2022-02-10 at 6 37 25 PM" src="https://user-images.githubusercontent.com/48639017/153379534-edcbf09c-2d42-4674-8393-b33f07e7f716.png">
 
 
 
@@ -171,7 +171,7 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 ### PR curve
 
-![image](https://user-images.githubusercontent.com/57916633/153210729-e1676809-274a-4ab8-8806-5e06aaca6f1d.png)
+<img width=650 src="https://user-images.githubusercontent.com/57916633/153210729-e1676809-274a-4ab8-8806-5e06aaca6f1d.png">
 
 - PR curve의 아래 면적인 mAP(mean Average Precision)값을 가지고 성능을 평가
 - 약 93%의 정확도를 보임
@@ -179,13 +179,17 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 ### Confusion matrix
 
-![image](https://user-images.githubusercontent.com/57916633/153211692-3dc15a78-4b1b-4c43-89a7-f138da4ed000.png)
+<img width="600" src="https://user-images.githubusercontent.com/48639017/153378686-bc7d858d-cf3c-466c-9b7e-63a78b1d11dd.png">
+
 
 - 대각선이 진하게 나타난 것을 통해 object가 올바르게 예측되고 있다는 것을 알 수 있음
 - 빨간색 박스로 표시한 background FN은 각 object를 background라고 잘못 예측한 경우의 비율
 - 볼라드는 15%의 오차가 있었지만 그 외의 클래스는 대부분 5% 미만으로 준수한 결과
 
-![image](https://user-images.githubusercontent.com/57916633/153212053-6f85bc8f-efc1-4d74-9c83-c90245b7d1bb.png)
+</br>
+
+<img width="600" src="https://user-images.githubusercontent.com/48639017/153378294-ac6813b1-449d-44e1-94d5-9e67e1f2d595.png">
+
 
 - 빨간색 박스로 표시된 FP는 탐지할 object가 없는 background를 object가 존재한다고 잘못 예측한 경우
 - 3분의 1 이상이 볼라드 였으며, 이는 볼라드의 특징이 비교적 다른 object에 비해 간단하여 벌어진 문제로 판단
@@ -197,34 +201,43 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 ## 1. 모델 학습용 말뭉치 생성
 
+말뭉치 생성 전 더 적절한 방식을 찾기 위해 음절과 어절 단위로 나누어 간단하게 학습 후 모델 성능을 비교
+
 - 음절 단위로 쪼갠 말뭉치(좌)
+    - epoch 100 이전에 안정화
+    - train accuracy 약 90%
 - 어절 단위로 쪼갠 말뭉치(우)
+    - epoch 150 이후에 안정화
+    - train accuracy 약 60%
 
 <p align="center"><img src="https://user-images.githubusercontent.com/48639017/153338656-c16339fb-435d-4316-9f95-2213c170dd8f.png"><img src="https://user-images.githubusercontent.com/48639017/153339122-e926183b-6d5b-4436-861a-b23c2cdb6a80.png"></p>
-💡 음절 단위 말뭉치로 모델 학습 후의 성능 평가 결과가 더 안정적이며 정확도 수치가 더 높아 음절 단위 말뭉치를 활용해 모델 성능을 개선하도록 함
-💡 input = detected object 로 명사이기 때문에 어절 단위보다 음절 단위일 경우가 더 적합하다고 판단
+
+💡 음절 단위 말뭉치로 모델 학습 후의 성능 평가 결과가 더 안정적이며 정확도 수치가 더 높아 음절 단위 말뭉치를 활용해 모델 성능을 개선하도록 함    
+💡 input = detected object 로 명사이기 때문에 조사가 포함되는 어절 단위보다 음절 단위가 더 적합하다고 판단
 
 ## 2. 모델 구조 및 학습 과정
 
-<p align="center"><img width="545" src="https://user-images.githubusercontent.com/48639017/153340026-b0312ebd-e6c6-4963-86d9-6a00a4e9c15c.png"></p>
+<img width="545" src="https://user-images.githubusercontent.com/48639017/153340026-b0312ebd-e6c6-4963-86d9-6a00a4e9c15c.png">
 
 📌 target object(사람, 차, 자전거, 전동킥보드, 오토바이, 볼라드)를 첫 단어로 적절한 문장 생성
 
 1. 음절 ID 부여
-    - 임베딩을 위해 음절 단위로 id값 준 dictionary 생성 및 pickle 파일 저장
+    - 임베딩을 위해 음절 단위로 id값 준 dictionary 생성
         - {'에': 1, '워': 2, '몇': 3, '서': 4, '대': 5, '바': 6, '토': 7, '지': 8 ... }
+    - 딕셔너리 pickle 파일로 저장 후 이후 문장 생성시 임베딩에도 활용할 수 있도록 함
 
 
 2. 학습 문장 임베딩
-    - 음절 단위 id로 모든 train 데이터 벡터화 후 순환 신경망에 적절한 형태로 데이터 변형
-    - 사람이 다가오고 있습니다<EOS> → [44, 37, 32, 22, 54, 46, 63, 20, 22, 21, 23, 29, 54, 40]
+    - 음절 단위 id로 모든 train 문장 데이터 벡터화
+        - ex) 사람이 다가오고 있습니다<EOS> → [44, 37, 32, 22, 54, 46, 63, 20, 22, 21, 23, 29, 54, 40]
+    - 순환 신경망에 적절한 형태로 변형
     - 문제+정답 벡터로 변환
         - array[:-1] 문제 - array[-1] 정답 
         - '사' → '람' [44, 37], '사람' → '이' [44, 37, 32]
     
   
 3. zero padding
-    - 모델에 input 전 일정 크기 벡터로 만들어야 하기 때문에 가장 긴 문장 크기로 0 padding
+    - 모델에 input 전 일정한 크기의 벡터로 만들기 위해 가장 긴 문장 크기로 pre-zero padding
     
     
 4. GRU model train
@@ -236,15 +249,19 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
 
 💡 YOLOv5 detect.py 에서 result 출력 변환해 GRU 모델과 연결
     
-<p align="center"><img width="545" alt="Screen Shot 2022-02-10 at 2 08 26 PM" src="https://user-images.githubusercontent.com/48639017/153341301-40a8979d-da40-41b5-8b1c-9ed3c43994a2.png"></p>
+<img width="545" alt="Screen Shot 2022-02-10 at 2 08 26 PM" src="https://user-images.githubusercontent.com/48639017/153341301-40a8979d-da40-41b5-8b1c-9ed3c43994a2.png">
     
 1. result 수정
     - detect 시점의 시간 등 불필요한 정보 제외하도록 result 내용 수정
+    - 기존 console에 출력되던 결과를 문자열로 저장
     
     
 2. GRU 함수 호출
     - detect.py 내 GRU 모델 함수화 하여 선언 
-    - GRU_main 에서 input 수정해 모델 실행
+        - GRU_main 에서 input 수정해 모델 실행
+    - 연산 비용 절감
+        - 매번 함수 호출하지 않고 버퍼를 만들어 detect 결과가 다를 때 함수 호출
+            - 위 이미지 중 파란 박스가 GRU 호출 부분
 
 ---
 
@@ -252,6 +269,40 @@ with open('/content/Yooninahong/description/data/char2idx3.pickle', 'rb') as fr:
     
 ## 💡 한계점
     
+1. 사용자 시야의 이동
+    
+    - 사용자가 계속해서 이동함에 따라 배경도 함께 움직이기 때문에 전방에 인식된 물체가 고정되었는지 다가오는지 구분 불가능
+    - 구분할 수 있다면 더 정확한 전방 상황 설명 가능
+        - ex) 오토바이가 다가오고 있습니다, 오토바이가 정차되어 있습니다
+    
+    
+2. 결과 안내 속도
+    - 실시간으로 사용자 시야 영상 속 target object 인식 후 문장 생성하여 사용자에게 안내하는 과정에서 딜레이 발생
+        - 서버와 디바이스 성능에 따라 딜레이 정도가 다름
+        - 연산 비용의 문제로 추정
+    
+   
+3. 실제 detect 결과의 낮은 recall
+    - 전방에 있는 물체를 없다고 여기는 문제 발생
+    - bounding box 중 target object 보다 배경이 더 많이 포함된 것이 문제가 될 수 있다고 추정
+        - 전동킥보드의 경우 annotation 했을 때, bounding box에서 특징을 추출할 영역보다 일반 보행로 등 배경이 더 많음
+
     
 ## 💡 개선 가능 방향
+    
+1. 구체적으로 class 분할
+    - 현 target object를 정면, 후면, 측면 등 구체적으로 나누어 방향 설명
+   
+    
+2. 어절 혹은 형태소 단위의 말뭉치로 GRU train
+    - 연산 비용 절감을 위해 음절 단위의 말뭉치를 더 큰 단위의 말뭉치로 대체
+        - ex) 어절, 형태소 단위
+        - 임베딩 과정의 연산 비용 절감 가능할 것으로 예상
+    
+  
+3. segmentation
+    - 현재는 이미지 속 여러 객체를 box로 구별하여 detection하는 object detection를 적용
+    - recall 향상을 위해 이미지 속 객체를 box가 아닌 정확한 영역으로 표시해 인식하는 segmentation 기법을 적용
+        - 특징 추출에 도움이 되지 않는 영역을 초소화하여 인식률 향상할 것으로 예상
+    
 
